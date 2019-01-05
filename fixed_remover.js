@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Fixed Remover
 // @namespace    https://github.com/ShoSatoJp
-// @version      0.6
+// @version      0.7
 // @description  try to take over the world!
 // @author       ShoSato
 // @match        *://*/*
