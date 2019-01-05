@@ -1,23 +1,23 @@
 // ==UserScript==
 // @name         Fixed Remover
-// @namespace    http://tampermonkey.net/
+// @namespace    https://github.com/ShoSatoJp
 // @version      0.6
 // @description  try to take over the world!
 // @author       ShoSato
 // @match        *://*/*
 // @grant        none
-// @updateURL https://www.dropbox.com/s/zlt03rpwxhysyab/fixed_remover.js?dl=1
-// @downloadURL https://www.dropbox.com/s/zlt03rpwxhysyab/fixed_remover.js?dl=1
+// @updateURL https://raw.githubusercontent.com/ShoSatoJp/fixed_remover/master/fixed_remover.js
+// @downloadURL https://raw.githubusercontent.com/ShoSatoJp/fixed_remover/master/fixed_remover.js
 // ==/UserScript==
 
 (function () {
     'use strict';
-    const max_depth = 5;
-    let depth = 0;
-    let count = 0;
-    let processed=0;
+    const MAX_DEPTH = 5;
+    let DEPTH = 0;
+    let COUNT = 0;
+    let PROCESSED = 0;
 
-    function f(e, d = 0) {
+    function remove_fixed(e, fn = null) {
         const style = window.getComputedStyle(e);
         if (style.position === 'fixed') {
             if (parseInt(style.top || '0') === 0) {
@@ -25,17 +25,45 @@
             } else {
                 e.remove();
             }
-            processed++;
+            fn && fn();
         }
-        d++ >= depth && (depth = d);
-        if (d >= max_depth) return;
+    }
+
+    //static element
+    function f(e, d = 0) {
+        remove_fixed(e, () => {
+            PROCESSED++;
+        });
+        d++ >= DEPTH && (DEPTH = d);
+        if (d >= MAX_DEPTH) return;
         Array.from(e.children).forEach(x => f(x, d));
-        count++;
+        COUNT++;
     }
     const start = Date.now();
     f(document.body);
+    const time = Date.now() - start;
+    
     const e = document.createElement('p');
-    e.textContent = `${(Date.now() - start)}ms depth:${depth} count:${count} processed:${processed}`;
+    function show_result(count, processed) {
+        e.textContent = `${time}ms depth:${DEPTH} count:${count} processed:${processed}`;
+    }
     document.body.appendChild(e);
-    // document.insertBefore(e,document.body.firstChild);
+
+    //dynamic change
+    const observer = new MutationObserver(function (records, mo) {
+        records.forEach(x => {
+            if (x.attributeName === 'style') {
+                remove_fixed(x.target, () => {
+                    show_result(COUNT++, PROCESSED++);
+                });
+            }
+        });
+    });
+    observer.observe(document.body, {
+        attributes: true,
+        childList: true,
+        characterData: true,
+        attributeFilter: ['style'],
+        subtree: true
+    });
 })();
