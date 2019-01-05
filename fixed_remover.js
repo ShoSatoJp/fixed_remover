@@ -16,6 +16,7 @@
     let DEPTH = 0;
     let COUNT = 0;
     let PROCESSED = 0;
+    const START = Date.now();
 
     function remove_fixed(e, fn = null) {
         const style = window.getComputedStyle(e);
@@ -30,7 +31,7 @@
     }
 
     //static element
-    function f(e, d = 0) {
+    (function f(e, d = 0) {
         remove_fixed(e, () => {
             PROCESSED++;
         });
@@ -38,16 +39,7 @@
         if (d >= MAX_DEPTH) return;
         Array.from(e.children).forEach(x => f(x, d));
         COUNT++;
-    }
-    const start = Date.now();
-    f(document.body);
-    const time = Date.now() - start;
-    
-    const e = document.createElement('p');
-    function show_result(count, processed) {
-        e.textContent = `${time}ms depth:${DEPTH} count:${count} processed:${processed}`;
-    }
-    document.body.appendChild(e);
+    })(document.body);
 
     //dynamic change
     const observer = new MutationObserver(function (records, mo) {
@@ -66,4 +58,14 @@
         attributeFilter: ['style'],
         subtree: true
     });
+
+    const TIME = Date.now() - START;
+
+    const RESULT_ELEMENT = document.createElement('p');
+
+    function show_result(count, processed) {
+        RESULT_ELEMENT.textContent = `${TIME}ms depth:${DEPTH} count:${count} processed:${processed}`;
+    }
+    document.body.appendChild(RESULT_ELEMENT);
+
 })();
