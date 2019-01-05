@@ -6,8 +6,8 @@
 // @author       ShoSato
 // @match        *://*/*
 // @grant        none
-// @updateURL https://raw.githubusercontent.com/ShoSatoJp/fixed_remover/master/fixed_remover.js
-// @downloadURL https://raw.githubusercontent.com/ShoSatoJp/fixed_remover/master/fixed_remover.js
+// @updateURL https://raw.githubusercontent.com/ShoSatoJp/fixed_remover/master/fixed_remover.user.js
+// @downloadURL https://raw.githubusercontent.com/ShoSatoJp/fixed_remover/master/fixed_remover.user.js
 // ==/UserScript==
 
 (function () {
