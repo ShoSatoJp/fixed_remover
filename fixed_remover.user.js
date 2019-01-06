@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Fixed Remover
 // @namespace    https://github.com/ShoSatoJp
-// @version      0.7
-// @description  try to take over the world!
+// @version      0.8
+// @description  remove fixed elements.
 // @author       ShoSato
 // @match        *://*/*
 // @grant        none
@@ -13,12 +13,14 @@
 (function () {
     'use strict';
     const MAX_DEPTH = 5;
+    const START = Date.now();
+    const RESULT_ELEMENT = document.createElement('p');
     let DEPTH = 0;
     let COUNT = 0;
     let PROCESSED = 0;
-    const START = Date.now();
+    document.body.appendChild(RESULT_ELEMENT);
 
-    function remove_fixed(e, fn = null) {
+    function remove_fixed(e, fn) {
         const style = window.getComputedStyle(e);
         if (style.position === 'fixed') {
             if (parseInt(style.top || '0') === 0) {
@@ -30,11 +32,13 @@
         }
     }
 
-    //static element
+    function show_result(count, processed) {
+        RESULT_ELEMENT.textContent = `${TIME}ms depth:${DEPTH} count:${count} processed:${processed}`;
+    }
+
+    //static elements
     (function f(e, d = 0) {
-        remove_fixed(e, () => {
-            PROCESSED++;
-        });
+        remove_fixed(e, () => PROCESSED++);
         d++ >= DEPTH && (DEPTH = d);
         if (d >= MAX_DEPTH) return;
         Array.from(e.children).forEach(x => f(x, d));
@@ -42,16 +46,12 @@
     })(document.body);
 
     //dynamic change
-    const observer = new MutationObserver(function (records, mo) {
+    (new MutationObserver(function (records) {
         records.forEach(x => {
-            if (x.attributeName === 'style') {
-                remove_fixed(x.target, () => {
-                    show_result(COUNT++, PROCESSED++);
-                });
-            }
+            if (x.attributeName === 'style')
+                remove_fixed(x.target, () => show_result(COUNT++, PROCESSED++));
         });
-    });
-    observer.observe(document.body, {
+    })).observe(document.body, {
         attributes: true,
         childList: true,
         characterData: true,
@@ -60,12 +60,5 @@
     });
 
     const TIME = Date.now() - START;
-
-    const RESULT_ELEMENT = document.createElement('p');
-
-    function show_result(count, processed) {
-        RESULT_ELEMENT.textContent = `${TIME}ms depth:${DEPTH} count:${count} processed:${processed}`;
-    }
-    document.body.appendChild(RESULT_ELEMENT);
-
+    show_result(COUNT, PROCESSED);
 })();
