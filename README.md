@@ -1,4 +1,4 @@
-# fixed_remover
+# Fixed Remover
 A tampermonkey script which removes fixed elements. This script is also available for dynamic change.
 
 ## Get Started
