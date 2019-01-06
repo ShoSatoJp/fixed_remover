@@ -18,11 +18,12 @@
     let DEPTH = 0;
     let COUNT = 0;
     let PROCESSED = 0;
+    let TIME = 0;
     document.body.appendChild(RESULT_ELEMENT);
 
     function remove_fixed(e, fn) {
         const style = window.getComputedStyle(e);
-        if (style.position === 'fixed') {
+        if (~['fixed', 'sticky'].indexOf(style.position)) {
             if (parseInt(style.top || '0') === 0) {
                 e.style.cssText += ';position:absolute !important;';
             } else {
@@ -47,18 +48,18 @@
 
     //dynamic change
     (new MutationObserver(function (records) {
-        records.forEach(x => {
-            if (x.attributeName === 'style')
-                remove_fixed(x.target, () => show_result(COUNT++, PROCESSED++));
-        });
+        const start = Date.now();
+        records.forEach(x => remove_fixed(x.target, () => (COUNT++, PROCESSED++)));
+        TIME += Date.now() - start;
+        show_result(COUNT, PROCESSED);
     })).observe(document.body, {
         attributes: true,
         childList: true,
         characterData: true,
-        attributeFilter: ['style'],
+        attributeFilter: ['style', 'class'],
         subtree: true
     });
 
-    const TIME = Date.now() - START;
+    TIME = Date.now() - START;
     show_result(COUNT, PROCESSED);
 })();
