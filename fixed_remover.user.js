@@ -19,7 +19,7 @@
     let COUNT = 0;
     let PROCESSED = 0;
     let TIME = 0;
-    document.body.appendChild(RESULT_ELEMENT);
+    document.body && document.body.appendChild(RESULT_ELEMENT);
 
     function remove_fixed(e, fn) {
         const style = window.getComputedStyle(e);
