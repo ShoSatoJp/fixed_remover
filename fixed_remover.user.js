@@ -38,17 +38,20 @@
     }
 
     //static elements
-    (function f(e, d = 0) {
-        remove_fixed(e, () => PROCESSED++);
-        d++ >= DEPTH && (DEPTH = d);
-        if (d >= MAX_DEPTH) return;
-        Array.from(e.children).forEach(x => f(x, d));
-        COUNT++;
-    })(document.body);
+    function remove_fixed_recursive(target, fn) {
+        (function f(e, d = 0) {
+            remove_fixed(e, fn);
+            d++ >= DEPTH && (DEPTH = d);
+            if (d >= MAX_DEPTH) return;
+            Array.from(e.children).forEach(x => f(x, d));
+            COUNT++;
+        })(target);
+    }
+    remove_fixed_recursive(document.body, () => PROCESSED++);
 
     //dynamic change
     (new MutationObserver(function (records) {
-        records.forEach(x => remove_fixed(x.target, () => (COUNT++, PROCESSED++)));
+        records.forEach(x => remove_fixed_recursive(x.target, () => (COUNT++, PROCESSED++)));
     })).observe(document.body, {
         attributes: true,
         childList: true,
