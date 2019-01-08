@@ -48,10 +48,7 @@
 
     //dynamic change
     (new MutationObserver(function (records) {
-        const start = Date.now();
         records.forEach(x => remove_fixed(x.target, () => (COUNT++, PROCESSED++)));
-        TIME += Date.now() - start;
-        show_result(COUNT, PROCESSED);
     })).observe(document.body, {
         attributes: true,
         childList: true,
