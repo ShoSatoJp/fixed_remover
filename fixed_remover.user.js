@@ -12,7 +12,7 @@
 
 (function () {
     'use strict';
-    const MAX_DEPTH = 1000;
+    const MAX_DEPTH = 5;
     const START = Date.now();
     const RESULT_ELEMENT = document.createElement('p');
     let DEPTH = 0;
