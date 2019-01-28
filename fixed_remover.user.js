@@ -8,7 +8,6 @@
 // @exclude /^https?:\/\/(.*\.|)(google|amazon)\.(com|co\.[a-zA-Z]{2})\/.*$/
 // @exclude /^https?:\/\/(.*\.|)(twitter|github|microsoftonline|visualstudio|dropbox|live|skype|bing|wunderlist|android|youtube|amazon|facebook|apple|regex101)\.com\/.*$/
 // @exclude /^https?:\/\/(.*\.|)(nicovideo)\.jp\/.*$/
-// @exclude /^https?:\/\/(([^\/]+(bank|gin))\.(com|jp|co\.[a-zA-Z]{2})|([^\/]*\.|)((paypal|smbc-card)\.com)|(mufg|japanpost|smtb)\.jp|(kansaiurban|visa|aeonbank|smbc|smbctb|hyakugo|juroku|boy)\.(com|co\.[a-zA-Z]{2}))\/.*$/
 // @exclude *://*ac.jp/*
 // @grant        none
 // @updateURL https://raw.githubusercontent.com/ShoSatoJp/fixed_remover/master/fixed_remover.user.js
